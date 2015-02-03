@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD}lib32/ld-linux.so.2"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH}lib/"
+exec bin/wmis "$@"
+
+echo "ERROR: couldn't exec bin/wmis" >&2
+exit 1

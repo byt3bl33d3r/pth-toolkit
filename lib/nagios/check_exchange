@@ -1,0 +1,191 @@
+#!/usr/bin/perl
+#
+# Nagois Plug-In to check Exchange Server
+#
+# Bill Edmunds, Academic Services, University of Exeter
+# 25th March, 2008
+#
+
+use strict;
+use lib "nagios/plugins";
+use utils qw($TIMEOUT %ERRORS &print_revision &support);
+use vars qw($PROGNAME);
+use Time::HiRes qw(gettimeofday tv_interval);
+
+# Variables
+$PROGNAME = 'check_exchange';
+my $SUCCESS = 'MAPI_E_SUCCESS';
+my $MYTIME = 10;
+my $version = "1.0";
+my $verbose = 0;
+my $pdb = '/usr/lib/nagios/plugins/check_exchange.ldb';
+my $cmd = 'openchangeclient';
+my $author = "Bill Edmunds, Academic Services, University of Exeter";
+my $email = 'W.Edmunds@exeter.ac.uk';
+my ($host, $stime, $etime, $warning, $critical);
+our($opt_h, $opt_V, $opt_v, $opt_H, $opt_d, $opt_w, $opt_c);
+my $status = 'UNKNOWN';
+
+$ENV{'BASH_ENV'}=''; 
+$ENV{'ENV'}='';
+$ENV{'PATH'}='/usr/local/samba/bin';
+$ENV{'LC_ALL'}='C';
+
+# Options
+use Getopt::Long;
+Getopt::Long::Configure('bundling');
+GetOptions(
+        "V"   => \$opt_V, "version"    => \$opt_V,
+        "h"   => \$opt_h, "help"       => \$opt_h,
+        "v+"  => \$opt_v, "verbose+"   => \$opt_v,
+        "H=s" => \$opt_H, "hostname=s" => \$opt_H,
+        "d=s" => \$opt_d, "database=s" => \$opt_d,
+        "w=f" => \$opt_w, "warning=f"  => \$opt_w,
+        "c=f" => \$opt_c, "critical=f" => \$opt_c,
+);
+
+# -h means help
+if ($opt_h) {
+    print_help();
+    exit $ERRORS{'OK'};
+}
+
+# -V means version
+if ($opt_V) {
+    print_revision($PROGNAME, "\$Revision: $version \$ ");
+    exit $ERRORS{'OK'};
+}
+
+# -v means verbose
+if ($opt_v) {
+    $verbose = 1;
+    print "$PROGNAME: Check access to MS Exchange via Openchange client\n\n";
+}
+
+# -H means host/profile name
+$opt_H || plugin_error("No hostname specified");
+
+if (! utils::is_hostname($opt_H)){
+        plugin_error("$opt_H is not a valid host name");
+} else {
+        $host = $opt_H;
+}
+
+# -d means profile database name
+if (defined($opt_d) && -r $opt_d) {
+    $pdb = $opt_d;
+} else {
+    plugin_error("No profile database available") if ! -r $pdb;
+}
+
+$verbose && print "$PROGNAME: Profile database is $pdb\n\n";
+
+# -c means critical threshold
+if ($opt_c && $opt_c =~ /^\d+\.*\d*$/ && $opt_c < $TIMEOUT) {
+        $critical = $opt_c;
+} else {
+        plugin_error("Specify critical threshold 0.1 - $TIMEOUT");
+}
+
+# -w means warning threshold
+if ($opt_w =~ /^\d+\.*\d*/ && $opt_w < $critical) {
+        $warning = $opt_w;
+} else {
+        plugin_error("Specify warning threshold 0.0 - $critical");
+}
+
+# Timeout
+if (defined($TIMEOUT)) {
+  $verbose && print "$PROGNAME: Alarm set at $TIMEOUT\n\n";
+  alarm($TIMEOUT);
+} else {
+  $verbose && print "$PROGNAME: Alarm set at $MYTIME\n\n";
+  alarm($MYTIME);
+}
+
+$stime = [gettimeofday];
+$verbose && print "$PROGNAME: Running $cmd -f $pdb -p $host -F\n\n";
+open(CMD, "$cmd -f $pdb -p $host -F |") || plugin_error("Can't run openchangeclient");
+while(<CMD>) {
+    if ($verbose > 1)  { print "$PROGNAME: $_"; }
+    $status = 'OK' if /$SUCCESS/io;
+    last if $status eq 'OK';
+}
+$etime = tv_interval($stime);
+
+$status = 'CRITICAL' if ($etime >= $critical || $status eq 'UNKNOWN');
+$status = 'WARNING' if ($etime >= $warning && $status ne 'CRITICAL');
+
+$verbose && print "$PROGNAME: status $status\n\n";
+
+#print "Elapsed time: $etime|time=$etime\n";
+# update to include measurement unit for Centreon graphs
+printf "Elapsed time: %s|time=%ss\n",$etime,$etime;
+
+exit $ERRORS{"$status"};
+
+# print_usage: Print usage information
+sub print_usage {
+    print <<EndOfUsage
+Usage: 
+ $PROGNAME -H HOSTNAME [-d DATABASE] -w WTIME -c CTIME [-v]
+ $PROGNAME [-h | --help]
+ $PROGNAME [-V | --version]
+EndOfUsage
+}
+
+# print_help: Print help information
+sub print_help {
+    print_revision($PROGNAME, "\$Revision: $version \$ ");
+    print <<EndOfHelp;
+
+Author: $author
+$email
+License: GNU General Public License
+
+$PROGNAME: Check access to MS Exchange via Openchange client
+
+EndOfHelp
+    print_usage();
+    print <<EndOfHelp;
+
+Options:
+ -h, --help
+    Print detailed help screen.
+ -V, --version
+    Print version information.
+ -v, --verbose
+    Print verbose information.
+ -H HOSTNAME, --hostname=HOSTNAME
+    Use HOSTNAME as the MS Exchange host (Note: this is actually the
+    profile name within the Openchange profile database. The associated
+    host information is stored against the profile information).
+ -d DATABASE, --database=DATABASE
+    Use DATABASE as the profile database (Note: the profile name
+    should match the HOSTNAME above).
+ -w WTIME, --warning=WTIME
+    Exit with WARNING status if time exceeds WTIME.
+ -c CTIME, --critical=CTIME
+    Exit with CRITICAL status if time exceeds CTIME.
+
+Profile database:
+    Location currently set to:
+       $pdb
+
+Created using:
+    mapiprofile -f <DATABASE> -P <HOSTNAME> -u <USERNAME> -p <PASSWORD> -M LOCALHOST
+                -D <DOMAIN> -I <IPADDRESS> -c
+
+Note that HOSTNAME is strictly the profile name, and the host connection is really derived
+from the IPADDRESS.
+
+The author wishes to offer thanks to the OpenChange team at: openchange.org
+EndOfHelp
+}
+
+sub plugin_error {
+    my $msg = $_[0];
+    print STDERR "$PROGNAME: $msg\n";
+    print_usage();
+    exit $ERRORS{'UNKNOWN'};
+}

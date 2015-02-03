@@ -1,0 +1,16 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+datarootdir=/opt/pth/share
+datadir=${datarootdir}
+modulesdir=${prefix}/modules/dcerpc_mapiproxy
+
+Name: MAPIPROXY
+Description: MAPI Proxy and Server Module Library
+Version: 2.0
+Libs: -L${libdir} -lmapiproxy
+Libs.private: -lz 
+Cflags: -I${includedir}
+Requires: talloc dcerpc ndr ldb
+Requires.private: samba-hostconfig

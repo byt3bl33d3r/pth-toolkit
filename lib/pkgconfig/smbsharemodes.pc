@@ -1,0 +1,11 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: Samba libsmbsharemodes
+Description: A library
+Version: 0
+Libs: -Wl,-rpath,/opt/pth/lib -L${libdir} -lsmbsharemodes
+Cflags: -I${includedir}
+URL: http://www.samba.org/

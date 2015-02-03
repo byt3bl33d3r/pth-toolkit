@@ -1,0 +1,12 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+modulesdir=${prefix}/lib/dcerpc_server
+
+Name: dcerpc_server
+Description: DCE/RPC server library
+Requires: dcerpc
+Version: 0.0.1
+Libs: -Wl,-rpath,/opt/pth/lib -L${libdir} -ldcerpc-server
+Cflags: -I${includedir} -DHAVE_IMMEDIATE_STRUCTURES=1

@@ -1,0 +1,11 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: ndr-krb5pac
+Description: NDR marshallers for the KRB5 PAC formats
+Requires: ndr
+Version: 0.0.1
+Libs: -Wl,-rpath,/opt/pth/lib -L${libdir} -lndr-krb5pac
+Cflags: -I${includedir}  -DHAVE_IMMEDIATE_STRUCTURES=1 -D_GNU_SOURCE=1

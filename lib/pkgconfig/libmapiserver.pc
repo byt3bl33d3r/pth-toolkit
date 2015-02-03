@@ -1,0 +1,15 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+datarootdir=/opt/pth/share
+datadir=${datarootdir}
+modulesdir=${prefix}/modules/dcerpc_mapiproxy_server
+
+Name: MAPISERVER 
+Description: Server side MAPI library
+Version: 2.0
+Libs: -L${libdir} -lmapiserver
+Libs.private: -lz 
+Cflags: -I${includedir}
+Requires: talloc

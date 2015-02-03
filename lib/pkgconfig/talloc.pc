@@ -1,0 +1,11 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: talloc 
+Description: A hierarchical pool based memory system with destructors
+Version: 2.0.7
+Libs: -Wl,-rpath,/opt/pth/lib -L${libdir} -ltalloc
+Cflags: -I${includedir} 
+URL: http://talloc.samba.org/

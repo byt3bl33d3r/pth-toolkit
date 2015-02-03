@@ -1,0 +1,16 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+modulesdir=${prefix}/modules/ldb
+
+Name: ldb
+Description: An LDAP-like embedded database
+Version: 1.1.15
+Requires.private: tdb
+Requires: talloc 
+Libs: -Wl,-rpath,/opt/pth/lib -L${libdir} -lldb
+Libs.private: 
+Cflags: -I${includedir} 
+Modulesdir: ${modulesdir}
+URL: http://ldb.samba.org/

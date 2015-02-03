@@ -1,0 +1,15 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+datarootdir=/opt/pth/share
+datadir=${datarootdir}
+
+Name: MAPI
+Description: MAPI Protocol Implementation
+Version: 2.0
+Libs: -L${libdir} -lmapi
+Libs.private: -lz 
+Cflags: -I${includedir}
+Requires: talloc dcerpc ndr tevent
+Requires.private: samba-hostconfig ldb

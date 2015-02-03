@@ -1,0 +1,11 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: Samba libnetapi
+Description: A library to control CIFS servers
+Version: 0
+Libs: -Wl,-rpath,/opt/pth/lib -L${libdir} -lnetapi
+Cflags: -I${includedir}
+URL: http://www.samba.org/

@@ -1,0 +1,13 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+modulesdir=${prefix}/modules/ldb
+
+Name: pyldb-util
+Description: Python bindings for LDB
+Version: 1.1.15
+Requires: ldb
+Libs: -Wl,-rpath,/opt/pth/lib -L${libdir} -lpyldb-util
+Cflags: -I${includedir}
+URL: http://ldb.samba.org/

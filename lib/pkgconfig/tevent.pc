@@ -1,0 +1,12 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: tevent
+Description: An event system library
+Version: 0.9.17
+Requires: talloc
+Libs: -L${libdir} -ltevent
+Cflags: -Wl,-rpath,/opt/pth/lib -I${includedir}
+URL: http://samba.org/

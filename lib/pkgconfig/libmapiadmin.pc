@@ -1,0 +1,15 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+datarootdir=/opt/pth/share
+datadir=${datarootdir}
+
+Name: MAPI admin library
+Description: Library supporting MAPI administration actions
+Version: 2.0
+Libs: -L${libdir} -lmapiadmin
+Libs.private: -lz 
+Cflags: -I${includedir}
+Requires: libmapi dcerpc_samr
+

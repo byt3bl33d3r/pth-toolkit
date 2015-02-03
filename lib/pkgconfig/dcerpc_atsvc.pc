@@ -1,0 +1,11 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: dcerpc_atsvc
+Description: DCE/RPC client library - ATSVC
+Requires.private: dcerpc ndr
+Version: 0.0.1
+Libs: -Wl,-rpath,/opt/pth/lib -L${libdir} -ldcerpc-atsvc
+Cflags: -I${includedir}  -DHAVE_IMMEDIATE_STRUCTURES=1

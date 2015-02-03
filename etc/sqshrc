@@ -1,0 +1,58 @@
+# $Id: global.sqshrc,v 1.1.1.1 2004/04/07 12:35:01 chunkm0nkey Exp $
+#
+# sqshrc - Global sqshrc initialization file. This file is
+#          installed as part of sqsh to act as a global
+#          resource file for all users of sqsh.
+#
+
+#
+# $semicolon_hack : This turns on the ability to use a semicolon as
+#             a sort of in-line go.  It is kind of hacky but seems
+#             to work pretty well.
+#
+\set semicolon_hack=on
+
+#
+# $prompt :   The value of this variable is expanded each time the
+#             prompt is displayed.  It may contain variables and
+#             even command substitutions (note that $date and $time
+#             are the more efficient ways of displaying the current
+#             date than `date`).
+#
+\set prompt='[$histnum] ${DSQUERY}.${database}.${lineno}> '
+
+#
+# $histsize : This variable is used to configure the number of 
+#             previous batches that have been executed by sqsh,
+#             setting this variable high uses up a little extra
+#             memory, and makes it a little harder to find the
+#             query that you are looking for, but comes in handy.
+#
+\set histsize=20
+
+#
+# $exit_failcount : This variable causes sqsh to exit with an exit
+#             status of the total number of batches that failed
+#             during the current session. This is useful for use 
+#             within shell scripts and the such.
+#
+\set exit_failcount=on
+
+#
+# $history_shorthand : Turns on the ability to perform csh-style
+#             history recall on the command line, such as !20.
+#
+\set history_shorthand=on
+
+#
+# The following alias is used to act as a replacement for the
+# '\go | more' command. It is smart enough to carry over any
+# parameters to \go.  If you always want "more" support then
+# you can do "\alias \go='\go !* | more'".
+# 
+\alias mo='\go !* | more'
+
+#
+# The following alias's create a more 'isql-like' environment.
+#
+\alias :r='\buf-load -a !*'

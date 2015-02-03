@@ -1,0 +1,11 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: pytalloc-util
+Description: Utility functions for using talloc objects with Python
+Version: 2.0.7
+Libs: -L${libdir} -lpytalloc-util
+Cflags: -Wl,-rpath,/opt/pth/lib -I${includedir}
+URL: http://talloc.samba.org/

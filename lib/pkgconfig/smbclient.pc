@@ -1,0 +1,11 @@
+prefix=/opt/pth
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: smbclient
+Description: A SMB library interface
+Version: 0.2.0
+Libs: -Wl,-rpath,/opt/pth/lib -L${libdir} -lsmbclient
+Cflags: -I${includedir}
+URL: http://www.samba.org/
