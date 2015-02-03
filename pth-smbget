@@ -1,7 +1,6 @@
 #!/bin/sh
 
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH }lib/:lib/private"
-#export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD }/pentest/pth-toolkit/lib/passing-the-hash/pth-samba.so"
 exec bin/smbget "$@"
 
 echo "ERROR: couldn't exec bin/smbget" >&2
