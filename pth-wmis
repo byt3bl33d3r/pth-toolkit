@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH}lib/"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH}lib/:lib/libc215"
 exec bin/wmis "$@"
 
 echo "ERROR: couldn't exec bin/wmis" >&2
